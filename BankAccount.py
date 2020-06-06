@@ -23,7 +23,7 @@ class Account:
         if amount <= self.balance:
             self.balance -= amount
         else:
-            print('Funds not available')
+            print('\nFunds not available')
 
 
 class SavingAccount(Account):
@@ -35,7 +35,7 @@ class SavingAccount(Account):
         super().__init__(acct_num, open_deposit)
 
     def __str__(self):
-        return f'Saving Account #{self.acct_num}\nSavings Account Balance{super().__str__()}'
+        return f'Saving Account: #{self.acct_num}\n\tBalance: {super().__str__()}'
 
 
 class CurrentAccount(Account):
@@ -47,7 +47,7 @@ class CurrentAccount(Account):
         super().__init__(acct_num, open_deposit)
 
     def __str__(self):
-        return f'Current Account #{self.acct_num}\nCurrent Account Balance{super().__str__()}'
+        return f'Current Account #{self.acct_num}\n\tBalance: {super().__str__()}'
 
 
 class BusinessAccount(Account):
@@ -59,7 +59,7 @@ class BusinessAccount(Account):
         super().__init__(acct_num, open_deposit)
 
     def __str__(self):
-        return f'Business Account #{self.acct_num}\nBusiness Account Balance{super().__str__()}'
+        return f'Business Account #{self.acct_num}\n\tBalance: {super().__str__()}'
 
 
 class Customer:
@@ -127,7 +127,11 @@ class Customer:
                 self.__pin = new_pin
                 break
 
-    def withdraw(self, acct_num, acct_type, amount):
+    def _acc_verifier(self, acct_num, acct_type):
+        """
+        verification of account and returns the object of that account.
+        This is for internal use alone!!
+        """
         acct_num = acct_num.lower()
         acct_type = acct_type.lower()
 
@@ -135,28 +139,32 @@ class Customer:
             ind = self.accounts[acct_type].index(acct_num)
 
         except KeyError:
-            print('\nPlease Check the account-type and try again')
+            return '\nPlease Check the account-type and try again'
 
         except ValueError:
-            print('\nPlease Check the account-number and try again')
-
+            return '\nPlease Check the account-number and try again'
         else:
             object_name = self.__accounts[acct_type][ind]
-            object_name.withdrawal(amount)
+            return object_name
+
+    def withdraw(self, acct_num, acct_type, amount):
+        user_account = self._acc_verifier(acct_num, acct_type)
+        if isinstance(user_account, str):
+            print(user_account)
+        else:
+            user_account.withdrawal(amount)
 
     def deposit(self, acct_num, acct_type, amount):
-        acct_num = acct_num.lower()
-        acct_type = acct_type.lower()
-
-        try:
-            ind = self.accounts[acct_type].index(acct_num)
-
-        except KeyError:
-            print('\nPlease Check the account-type and try again')
-
-        except ValueError:
-            print('\nPlease Check the account-number and try again')
-
+        user_account = self._acc_verifier(acct_num, acct_type)
+        if isinstance(user_account, str):
+            print(user_account)
         else:
-            object_name = self.__accounts[acct_type][ind]
-            object_name.deposit(amount)
+            user_account.deposit(amount)
+
+    def get_balance(self, acct_num, acct_type):
+        user_account = self._acc_verifier(acct_num, acct_type)
+        if isinstance(user_account, str):
+            print(user_account)
+        else:
+            print(user_account)
+
