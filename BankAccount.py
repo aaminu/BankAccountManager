@@ -2,7 +2,6 @@
 Bank Account Manager with normal and ATM type withdrawal
 """
 
-
 class Account:
     """
     Abstract base class for account types.
